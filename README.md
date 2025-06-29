@@ -22,7 +22,7 @@ It enables real-time task assignment, communication, and performance tracking �
 
 ### 👨‍💼 For Employees:
 - View tasks within a 6 km radius
-- Update task statuses (e.g. in-progress, done)
+- Update task statuses (e.g., in-progress, done)
 - Earn bonuses or penalties based on task completion
 
 ---
@@ -65,6 +65,13 @@ docker exec -it app python manage.py migrate
 docker exec -it app python manage.py createsuperuser
 ```
 #### Replace app with your Django container name if different.
+
+### 🧾 Sample — Store Request via Telegram
+![Store request screenshot](![image](https://github.com/user-attachments/assets/1aeccc9b-f065-4596-b358-e400e00c6f1c))
+
+### 🛠️ Admin Panel – Task Assignment
+![Admin task screen](![image](https://github.com/user-attachments/assets/f8ffa2a2-15b4-4aec-a26d-92aa701f760f))
+
 
 ## 📍 Location-Based Intelligence
 - Dynamic 6 km geolocation filtering

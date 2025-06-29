@@ -67,10 +67,10 @@ docker exec -it app python manage.py createsuperuser
 #### Replace app with your Django container name if different.
 
 ### 🧾 Sample — Store Request via Telegram
-![Store request screenshot](![image](https://github.com/user-attachments/assets/1aeccc9b-f065-4596-b358-e400e00c6f1c))
+![Store request screenshot](https://github.com/user-attachments/assets/1aeccc9b-f065-4596-b358-e400e00c6f1c)
 
 ### 🛠️ Admin Panel – Task Assignment
-![Admin task screen](![image](https://github.com/user-attachments/assets/f8ffa2a2-15b4-4aec-a26d-92aa701f760f))
+![Admin task screen](https://github.com/user-attachments/assets/f8ffa2a2-15b4-4aec-a26d-92aa701f760f)
 
 
 ## 📍 Location-Based Intelligence

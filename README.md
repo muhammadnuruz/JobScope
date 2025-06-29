@@ -75,9 +75,27 @@ docker exec -it app python manage.py createsuperuser
 - JWT tokens for secure access
 - Role-based permissions (store, employee, company admin)
 
-📬 Contact
-For questions, collaborations or feedback:
-[![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white&style=for-the-badge)](https://github.com/muhammadnuruz)
-[![Telegram](https://img.shields.io/badge/Telegram-0088CC?logo=telegram&logoColor=white&style=for-the-badge)](https://t.me/themuhammadnur)
+## 👨‍💻 Developed By
 
-“Great teams are built by great coordination — and WorkLink makes that coordination seamless.”
+**Muhammad Nur Suxbatullayev**  
+🎓 Junior Back-End Developer with 1+ years of hands-on experience  
+🏫 Full Scholarship Recipient at PDP University  
+🧠 Skilled in building scalable and secure back-end systems using:  
+- Python & Django  
+- Django REST Framework (DRF)  
+- PostgreSQL  
+- Docker & Containerization  
+- Aiogram (Telegram Bot Framework)  
+- RESTful API Design & Integration
+
+🔗 **GitHub:** [github.com/muhammadnuruz](https://github.com/muhammadnuruz)  
+📬 **Telegram:** [@TheMuhammadNur](https://t.me/TheMuhammadNur)
+
+---
+
+## ⭐ Support the Project
+
+If this project helped you, inspired you, or you simply liked it, please consider giving it a **⭐ on GitHub**.  
+Your support boosts the project's visibility and motivates continued improvements and future updates.
+
+Thank you for being part of the journey!

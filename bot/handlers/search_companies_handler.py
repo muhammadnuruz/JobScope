@@ -68,17 +68,20 @@ async def submit_application(msg: types.Message, state: FSMContext):
     response = requests.get(f"http://127.0.0.1:8005/api/telegram-users/chat_id/{msg.from_user.id}/")
     user = response.json()
     location_link = f"https://maps.google.com/?q={user['location_lat']},{user['location_lng']}"
-    await bot.send_message(
-        chat_id=res_company['group_id'],
-        text=(
-            f"📥 Новое приложение!\n"
-            f"👤 Пользователь: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.full_name}</a>\n"
-            f"🏢 Компания: {res_company['name']}\n"
-            f"💰 Предлагаемая сумма: {amount}\n"
-            f"📍 <a href='{location_link}'>Расположение</a>"
-        ),
-        parse_mode="HTML"
-    )
+    try:
+        await bot.send_message(
+            chat_id=res_company['group_id'],
+            text=(
+                f"📥 Новое приложение!\n"
+                f"👤 Пользователь: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.full_name}</a>\n"
+                f"🏢 Компания: {res_company['name']}\n"
+                f"💰 Предлагаемая сумма: {amount}\n"
+                f"📍 <a href='{location_link}'>Расположение</a>"
+            ),
+            parse_mode="HTML"
+        )
+    except Exception:
+        pass
     await state.finish()
 
 

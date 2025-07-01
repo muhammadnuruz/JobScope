@@ -29,7 +29,7 @@ class Task(models.Model):
     completed_at = models.DateTimeField("Время выполнения", blank=True, null=True)
     reward = models.IntegerField("Награда (баллы)", default=0)
     penalty = models.IntegerField("Штраф (баллы)", default=0)
-    status = models.CharField("Статус", max_length=20, choices=STATUS_CHOICES, default='in_pogress')
+    status = models.CharField("Статус", max_length=20, choices=STATUS_CHOICES, default='in_progress')
     created_at = models.DateTimeField("Создано", auto_now_add=True)
     updated_at = models.DateTimeField("Обновлено", auto_now=True)
 

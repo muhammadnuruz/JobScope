@@ -93,6 +93,12 @@ class MyTasksAPIView(APIView):
         chat_id = request.query_params.get("chat_id")
         if not chat_id:
             return Response({"detail": "chat_id is required"}, status=400)
-        tasks = Task.objects.filter(user=chat_id)
+
+        try:
+            user = TelegramUsers.objects.get(chat_id=chat_id)
+        except TelegramUsers.DoesNotExist:
+            return Response({"detail": "User not found"}, status=404)
+
+        tasks = Task.objects.filter(user=user)
         serializer = TaskListSerializer2(tasks, many=True)
         return Response(serializer.data)

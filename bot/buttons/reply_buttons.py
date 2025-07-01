@@ -1,7 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 from bot.buttons.text import back_main_menu, adverts, none_advert, forward_advert, change_location, favourite_companies, \
-    search_companies, near_shops, active_tasks, all_active_tasks, create_task
+    search_companies, near_shops, active_tasks, all_active_tasks, create_task, all_companies
 import requests
 
 
@@ -10,6 +10,7 @@ async def main_menu_buttons(chat_id: int):
     user = response.json()
     if user.get("status") == "customer":
         buttons = [
+            [KeyboardButton(all_companies)],
             [KeyboardButton(search_companies)],
             [KeyboardButton(favourite_companies)],
             [KeyboardButton(change_location)]

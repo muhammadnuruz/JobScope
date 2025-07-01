@@ -4,12 +4,31 @@ from aiogram.types import CallbackQuery
 import requests
 
 from bot.buttons.inline_buttons import make_application_button
-from bot.buttons.text import search_companies
+from bot.buttons.text import search_companies, all_companies
 from bot.dispatcher import dp, bot
 from bot.states import SearchCompanyState
 from bot.buttons.reply_buttons import main_menu_buttons, back_main_menu_button, amount_button
 
 API_URL = "http://127.0.0.1:8005/api/companies/companies/"
+
+
+@dp.message_handler(text=all_companies)
+async def get_all_companies(msg: types.Message):
+    response = requests.get(API_URL)
+    if response.status_code == 200:
+        companies = response.json()
+        if not companies.get("results"):
+            await msg.answer("❌ Компания не найдена.")
+        else:
+            await msg.answer(text="🔍 Найденные компании:")
+            for company in companies['results']:
+                await msg.answer(
+                    parse_mode="HTML",
+                    text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>",
+                    reply_markup=await make_application_button(company['id'])
+                )
+    else:
+        await msg.answer("❗ Произошла ошибка при поиске..")
 
 
 @dp.message_handler(text=search_companies)

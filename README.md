@@ -85,15 +85,9 @@ docker exec -it app python manage.py createsuperuser
 ## 👨‍💻 Developed By
 
 **Muhammad Nur Suxbatullayev**  
-🎓 Junior Back-End Developer with 1+ years of hands-on experience  
+🎓 Back-End Developer with 1+ years of hands-on experience  
 🏫 Full Scholarship Recipient at PDP University  
 🧠 Skilled in building scalable and secure back-end systems using:  
-- Python & Django  
-- Django REST Framework (DRF)  
-- PostgreSQL  
-- Docker & Containerization  
-- Aiogram (Telegram Bot Framework)  
-- RESTful API Design & Integration
 
 🔗 **GitHub:** [github.com/muhammadnuruz](https://github.com/muhammadnuruz)  
 📬 **Telegram:** [@TheMuhammadNur](https://t.me/TheMuhammadNur)
@@ -102,7 +96,7 @@ docker exec -it app python manage.py createsuperuser
 
 ## ⭐ Support the Project
 
-If this project helped you, inspired you, or you simply liked it, please consider giving it a **⭐ on GitHub**.  
+If this project helped you, inspired you, or you simply liked it — please consider giving it a **⭐ on GitHub**.  
 Your support boosts the project's visibility and motivates continued improvements and future updates.
 
 Thank you for being part of the journey!

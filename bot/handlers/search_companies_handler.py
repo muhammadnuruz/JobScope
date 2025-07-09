@@ -93,6 +93,7 @@ async def submit_application(msg: types.Message, state: FSMContext):
             text=(
                 f"📥 Новое приложение!\n"
                 f"👤 Пользователь: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.full_name}</a>\n"
+                f"📲 Номер телефона: {user['phone_number']}"
                 f"🏢 Компания: {res_company['name']}\n"
                 f"💰 Предлагаемая сумма: {amount}\n"
                 f"📍 <a href='{location_link}'>Расположение</a>"

@@ -39,3 +39,8 @@ class CompaniesAdmin(admin.ModelAdmin):
         return obj.employees.count()
 
     employee_count.short_description = "Кол-во сотрудников"
+
+    class Media:
+        css = {
+            'all': ('admin/custom_admin.css',)
+        }

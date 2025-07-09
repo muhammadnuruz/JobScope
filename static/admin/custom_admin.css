@@ -1,0 +1,10 @@
+.selector-available,
+.selector-chosen {
+    width: 400px !important;
+    min-height: 300px !important;
+}
+
+.selector {
+    width: auto !important;
+    max-width: 1000px !important;
+}

@@ -14,7 +14,7 @@ DEBT_CREATE_API = "http://127.0.0.1:8005/api/debts/create/"
 
 @dp.message_handler(Text(equals=create_debt))
 async def start_debt_creation(msg: types.Message, state: FSMContext):
-    await msg.answer("👤 Введите имя должника:", reply_markup=await back_main_menu_button())
+    await msg.answer("👤 Введите имя:", reply_markup=await back_main_menu_button())
     await state.set_state("debt_borrower_name")
 
 

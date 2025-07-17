@@ -26,7 +26,7 @@ async def show_user_debts(msg: types.Message):
         await msg.answer("📭 У вас нет долгов.")
         return
 
-    total_sum = sum(debt.get("price", 0) for debt in results)
+    total_sum = sum(debt.get("amount", 0) for debt in results)
     formatted_total_sum = f"{total_sum:,.2f}".replace(",", " ").replace(".", ",")
     count = len(results)
 
@@ -44,7 +44,7 @@ async def show_user_debts(msg: types.Message):
         except Exception:
             formatted_deadline = debt['deadline']
 
-        formatted_amount = f"{debt['price']:,.2f}".replace(",", " ").replace(".", ",")
+        formatted_amount = f"{debt['amount']:,.2f}".replace(",", " ").replace(".", ",")
         price = debt.get("price", "❓")
         if isinstance(price, (int, float)):
             formatted_price = f"{price:,.2f}".replace(",", " ").replace(".", ",")

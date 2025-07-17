@@ -57,7 +57,7 @@ async def daily_check():
                     pass
                 continue
 
-            total_sum = sum(d.get("price", 0) for d in active_debts)
+            total_sum = sum(d.get("amount", 0) for d in active_debts)
             formatted_total = f"{total_sum:,.2f}".replace(",", " ").replace(".", ",")
 
             intro_text = (
@@ -78,7 +78,7 @@ async def daily_check():
                 except:
                     formatted_deadline = deadline_str
 
-                amount = f"{debt.get('price', 0):,.2f}".replace(",", " ").replace(".", ",")
+                amount = f"{debt.get('amount', 0):,.2f}".replace(",", " ").replace(".", ",")
                 price = debt.get("price", "❓")
                 if isinstance(price, (int, float)):
                     formatted_price = f"{price:,.2f}".replace(",", " ").replace(".", ",")

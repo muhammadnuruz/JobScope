@@ -10,7 +10,7 @@ class Debt(models.Model):
         verbose_name='Пользователь'
     )
     borrower_name = models.CharField("Имя должника", max_length=255)
-    amount = models.DecimalField("Сумма долга (сум)", max_digits=12, decimal_places=2)
+    amount = models.FloatField("Сумма долга (сум)")
     deadline = models.DateField("Срок возврата")
     price = models.FloatField()
     created_at = models.DateTimeField("Дата создания", auto_now_add=True)

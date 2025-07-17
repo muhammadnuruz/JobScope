@@ -1,3 +1,4 @@
+import html
 import logging
 import requests
 from datetime import datetime
@@ -23,42 +24,35 @@ async def daily_check():
             print("❌ Foydalanuvchilarni olishda xatolik.")
             return
 
-        users = users_resp.json()
+        users = users_resp.json().get("results", [])
 
-        for user in users['results']:
+        for user in users:
             chat_id = user["chat_id"]
 
             debts_resp = requests.get(DEBT_LIST_API, params={"chat_id": chat_id})
             if debts_resp.status_code != 200:
                 continue
 
-            debts = debts_resp.json().get("results", [])
-            if not debts:
-                try:
-                    await bot.send_message(chat_id, "📭 У вас нет долгов.")
-                except:
-                    pass
-                continue
-
+            all_debts = debts_resp.json().get("results", [])
             active_debts = []
-            for debt in debts:
-                deadline = debt.get("deadline")
+
+            for debt in all_debts:
                 try:
-                    deadline_date = datetime.strptime(deadline, "%Y-%m-%d").date()
-                    if deadline_date >= datetime.today().date():
+                    deadline = datetime.strptime(debt["deadline"], "%Y-%m-%d").date()
+                    if deadline >= datetime.today().date():
                         active_debts.append(debt)
                 except:
-                    pass
+                    continue
 
             if not active_debts:
                 try:
                     await bot.send_message(chat_id, "📭 У вас нет долгов.")
                 except:
-                    pass
+                    continue
                 continue
 
-            total_sum = sum(d.get("amount", 0) for d in active_debts)
-            formatted_total = f"{total_sum:,.2f}".replace(",", " ").replace(".", ",")
+            total_sum = sum(d["amount"] for d in active_debts)
+            formatted_total = f"{total_sum:,}".replace(",", " ")
 
             intro_text = (
                 f"📄 Всего долгов: <b>{len(active_debts)}</b>\n"
@@ -68,25 +62,22 @@ async def daily_check():
             try:
                 await bot.send_message(chat_id, intro_text, parse_mode="HTML")
             except:
-                pass
+                continue
 
             for debt in active_debts:
-                deadline_str = debt.get("deadline", "—")
                 try:
-                    deadline_date = datetime.strptime(deadline_str, "%Y-%m-%d")
-                    formatted_deadline = deadline_date.strftime("%d-%m-%Y")
+                    deadline = datetime.strptime(debt["deadline"], "%Y-%m-%d")
+                    formatted_deadline = deadline.strftime("%d-%m-%Y")
                 except:
-                    formatted_deadline = deadline_str
+                    formatted_deadline = debt["deadline"]
 
-                amount = f"{debt.get('amount', 0):,.2f}".replace(",", " ").replace(".", ",")
-                price = debt.get("price", "❓")
-                if isinstance(price, (int, float)):
-                    formatted_price = f"{price:,.2f}".replace(",", " ").replace(".", ",")
-                else:
-                    formatted_price = price
+                formatted_amount = f"{debt['amount']:,}".replace(",", " ")
+                formatted_price = f"{debt['price']:,}".replace(",", " ")
+
+                borrower_name = html.escape(debt['borrower_name'])
 
                 text = (
-                    f"👤 <b>{debt['borrower_name']}</b> — <b>{amount} сум</b>\n"
+                    f"👤 <b>{borrower_name}</b> — <b>{formatted_amount} сум</b>\n"
                     f"📅 Дата возврата: <b>{formatted_deadline}</b>\n"
                     f"📈 Ежедневный платеж: <b>{formatted_price} сум</b>"
                 )
@@ -94,10 +85,11 @@ async def daily_check():
                 keyboard = InlineKeyboardMarkup().add(
                     InlineKeyboardButton("🗑 Удалить", callback_data=f"delete_debt_{debt['id']}")
                 )
+
                 try:
                     await bot.send_message(chat_id, text, reply_markup=keyboard, parse_mode="HTML")
                 except:
-                    pass
+                    continue
     except Exception as e:
         print("Xatolik:", e)
 

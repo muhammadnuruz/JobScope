@@ -1,3 +1,4 @@
+import html
 from datetime import datetime
 
 from aiogram.dispatcher.filters import Text
@@ -27,11 +28,10 @@ async def show_user_debts(msg: types.Message):
         return
 
     total_sum = sum(debt.get("amount", 0) for debt in results)
-    formatted_total_sum = f"{total_sum:,.2f}".replace(",", " ").replace(".", ",")
-    count = len(results)
+    formatted_total_sum = f"{total_sum:,}".replace(",", " ")
 
     intro_text = (
-        f"📄 Всего долгов: <b>{count}</b>\n"
+        f"📄 Всего долгов: <b>{len(results)}</b>\n"
         f"💰 Общая сумма: <b>{formatted_total_sum} сум</b>\n\n"
         f"<b>Список должников:</b>"
     )
@@ -44,15 +44,13 @@ async def show_user_debts(msg: types.Message):
         except Exception:
             formatted_deadline = debt['deadline']
 
-        formatted_amount = f"{debt['amount']:,.2f}".replace(",", " ").replace(".", ",")
-        price = debt.get("price", "❓")
-        if isinstance(price, (int, float)):
-            formatted_price = f"{price:,.2f}".replace(",", " ").replace(".", ",")
-        else:
-            formatted_price = price
+        borrower_name = html.escape(debt['borrower_name'])
+
+        formatted_amount = f"{int(debt['amount']):,}".replace(",", " ")
+        formatted_price = f"{int(debt['price']):,}".replace(",", " ")
 
         text = (
-            f"👤 <b>{debt['borrower_name']}</b> — <b>{formatted_amount} сум</b>\n"
+            f"👤 <b>{borrower_name}</b> — <b>{formatted_amount} сум</b>\n"
             f"📅 Дата возврата: <b>{formatted_deadline}</b>\n"
             f"📈 Ежедневный платеж: <b>{formatted_price} сум</b>"
         )

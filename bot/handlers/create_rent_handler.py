@@ -56,7 +56,7 @@ async def get_deadline(msg: types.Message, state: FSMContext):
             await msg.answer("⚠️ Дата не должна быть в прошлом или совпадать с сегодняшним днем.")
             return
 
-        price_per_day = int(data["amount"])
+        price_per_day = int(data["amount"] / remaining_days)
 
         formatted_deadline = deadline_date.strftime("%Y-%m-%d")
 

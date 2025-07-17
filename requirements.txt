@@ -34,3 +34,4 @@ typing_extensions==4.12.2
 uritemplate==4.2.0
 urllib3==2.2.3
 yarl==1.11.1
+apscheduler

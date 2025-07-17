@@ -29,11 +29,22 @@ async def show_user_debts(msg: types.Message):
 
     total_sum = sum(debt.get("amount", 0) for debt in results)
     formatted_total_sum = f"{total_sum:,}".replace(",", " ")
+    formatted_total_price = f"{sum(int(d.get('price', 0)) for d in results):,}".replace(",", " ")
+
+    debt_lines = []
+    for debt in results:
+        borrower_name = html.escape(debt['borrower_name'])
+        formatted_amount = f"{int(debt.get('amount', 0)):,}".replace(",", " ")
+        debt_lines.append(f"👤 {borrower_name} — {formatted_amount} сум")
+
+    debt_text = "\n".join(debt_lines)
 
     intro_text = (
         f"📄 Всего долгов: <b>{len(results)}</b>\n"
-        f"💰 Общая сумма: <b>{formatted_total_sum} сум</b>\n\n"
-        f"<b>Список должников:</b>"
+        f"💰 Общая сумма: <b>{formatted_total_sum} сум</b>\n"
+        f"📈 Ежедневный платеж: <b>{formatted_total_price} сум</b>\n"
+        f"<b>Список должников:</b>\n"
+        f"{debt_text}"
     )
     await msg.answer(intro_text, parse_mode="HTML")
 

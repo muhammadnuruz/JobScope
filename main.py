@@ -52,15 +52,27 @@ async def daily_check():
                 continue
 
             total_sum = sum(d["amount"] for d in active_debts)
-            formatted_total = f"{total_sum:,}".replace(",", " ")
+            total_daily = sum(d.get("price", 0) for d in active_debts)
 
-            intro_text = (
+            formatted_total = f"{total_sum:,}".replace(",", " ")
+            formatted_daily = f"{total_daily:,}".replace(",", " ")
+            debt_lines = []
+            for debt in active_debts:
+                borrower_name = html.escape(debt["borrower_name"])
+                formatted_amount = f"{debt['amount']:,}".replace(",", " ")
+                debt_lines.append(f"👤 {borrower_name} — {formatted_amount} сум")
+
+            debt_text = "\n".join(debt_lines)
+
+            message = (
                 f"📄 Всего долгов: <b>{len(active_debts)}</b>\n"
-                f"💰 Общая сумма: <b>{formatted_total} сум</b>\n\n"
-                f"<b>Список должников:</b>"
+                f"💰 Общая сумма: <b>{formatted_total} сум</b>\n"
+                f"📈 Ежедневный платеж: <b>{formatted_daily} сум</b>\n"
+                f"<b>Список должников:</b>\n"
+                f"{debt_text}"
             )
             try:
-                await bot.send_message(chat_id, intro_text, parse_mode="HTML")
+                await bot.send_message(chat_id, message, parse_mode="HTML")
             except:
                 continue
 

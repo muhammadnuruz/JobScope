@@ -28,7 +28,7 @@ async def get_borrower_name(msg: types.Message, state: FSMContext):
 @dp.message_handler(state="debt_amount")
 async def get_amount(msg: types.Message, state: FSMContext):
     try:
-        amount = float(msg.text.replace(",", "."))
+        amount = int(msg.text)
         await state.update_data(amount=amount)
     except ValueError:
         await msg.answer("⚠️ Введите корректную сумму.")

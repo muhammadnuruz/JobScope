@@ -5,6 +5,7 @@ from datetime import datetime
 
 from aiogram import executor
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pytz import timezone
 
 from bot import handlers
 from bot.dispatcher import dp, bot
@@ -143,11 +144,11 @@ scheduler = AsyncIOScheduler()
 async def on_startup(dp: Dispatcher):
     scheduler.add_job(
         daily_check,
-        trigger=CronTrigger(hour=8, minute=0),
+        trigger=CronTrigger(hour=8, minute=0, timezone=timezone("Asia/Tashkent")),
     )
     scheduler.add_job(
         delete_expired_debts,
-        trigger=CronTrigger(hour=0, minute=0),
+        trigger=CronTrigger(hour=0, minute=0, timezone=timezone("Asia/Tashkent")),
     )
     scheduler.start()
     print("✅ Scheduler ishga tushdi.")

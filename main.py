@@ -46,10 +46,6 @@ async def daily_check():
                     continue
 
             if not active_debts:
-                try:
-                    await bot.send_message(chat_id, "📭 У вас нет долгов.")
-                except:
-                    continue
                 continue
 
             total_sum = sum(d["amount"] for d in active_debts)

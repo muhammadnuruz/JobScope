@@ -7,7 +7,10 @@ load_dotenv()
 
 
 class Config:
-    BOT_TOKEN = os.getenv('TOKEN')
+    BOT_TOKEN = os.getenv("TOKEN")
+    URL = os.getenv("URL")
+    LOGIN = os.getenv("LOGIN")
+    PASSWORD = os.getenv("PASSWORD")
 
 
 bot = Bot(Config.BOT_TOKEN)

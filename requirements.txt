@@ -35,3 +35,6 @@ uritemplate==4.2.0
 urllib3==2.2.3
 yarl==1.11.1
 apscheduler
+python-dateutil
+langchain-core
+langchain-openai

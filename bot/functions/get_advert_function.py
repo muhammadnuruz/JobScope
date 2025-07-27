@@ -1,3 +1,4 @@
+import asyncio
 import os
 import re
 import shutil
@@ -415,9 +416,8 @@ class AIProductManager:
         await self.get_orders()
         sum = 0
         for client in clients:
-            if sum > 1500:
-                await self.bot.send_message(self.admin, "1500 dan oshib ketdi")
-                return
+            await asyncio.sleep(5)
+            print(sum)
             text = ""
             text_2 = f"Mijoz: {client.get('name')} (ID: {client.get('CS_id')} Phone number: {client.get('tel')})"
             text_3 = ""

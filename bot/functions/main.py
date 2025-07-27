@@ -28,7 +28,7 @@ async def on_startup(dp: Dispatcher):
 
     scheduler.add_job(
         func=lambda: asyncio.run(run_get_advert()),
-        trigger=CronTrigger(hour=14, minute=20, timezone=timezone("Asia/Tashkent")),
+        trigger=CronTrigger(hour=14, minute=23, timezone=timezone("Asia/Tashkent")),
     )
 
     scheduler.add_job(

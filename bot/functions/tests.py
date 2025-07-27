@@ -9,8 +9,10 @@ import asyncio
 async def main():
     manager = AIProductManager()
     await manager.login()
-    clients = await manager.get_clients()
-    print(len(clients))
+    items = await manager.get_items()
+    for item in items:
+        print(item['packQuantity'])
+
 
 if __name__ == "__main__":
     asyncio.run(main())

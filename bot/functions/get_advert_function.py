@@ -197,7 +197,7 @@ class AIProductManager:
                 "name": name,
                 "price": price,
                 "imageUrl": imageUrl,
-
+                "packQuantity": item.get('packQuantity')
             })
         self.items = item_list
         return item_list
@@ -347,20 +347,21 @@ class AIProductManager:
 
         docs = []
         for item in self.items:
-            name = (item.get("name") or "").strip()
-            cs_id = item.get("id")
-            price = item.get("price")
-            if not name or not cs_id:
-                continue
+            if item['packQuantity'] > 0:
+                name = (item.get("name") or "").strip()
+                cs_id = item.get("id")
+                price = item.get("price")
+                if not name or not cs_id:
+                    continue
 
-            metadata = {
-                "id": cs_id,
-                "name": name,
-                "price": price
-            }
+                metadata = {
+                    "id": cs_id,
+                    "name": name,
+                    "price": price
+                }
 
-            doc = Document(page_content=name, metadata=metadata)
-            docs.append(doc)
+                doc = Document(page_content=name, metadata=metadata)
+                docs.append(doc)
 
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
         Chroma.from_documents(

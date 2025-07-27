@@ -38,3 +38,5 @@ apscheduler
 python-dateutil
 langchain-core
 langchain-openai
+UzTransliterator
+langchain-community

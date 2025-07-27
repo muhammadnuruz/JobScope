@@ -9,11 +9,8 @@ import asyncio
 async def main():
     manager = AIProductManager()
     await manager.login()
-    items = await manager.get_items()
-    for item in items:
-        if "96" in item['name']:
-            print(item)
-
+    clients = await manager.get_clients()
+    print(len(clients))
 
 if __name__ == "__main__":
     asyncio.run(main())

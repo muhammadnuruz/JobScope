@@ -1,7 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.types import InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardMarkup, InlineKeyboardButton, \
-    CallbackQuery
+from aiogram.types import InlineQueryResultArticle, InputTextMessageContent, CallbackQuery
 from uuid import uuid4
 import requests
 

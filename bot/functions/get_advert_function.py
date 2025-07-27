@@ -1,12 +1,19 @@
+import os
 import re
+import shutil
 from datetime import datetime
+from typing import List, Dict
+from langchain_community.vectorstores import Chroma
+from langchain_core.documents import Document
+
 from dateutil.relativedelta import relativedelta
+from UzTransliterator import UzTransliterator
 
 import requests
 
 from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 load_dotenv()
 
@@ -31,6 +38,9 @@ class AIProductManager:
         self.items = None
         self.orders = None
         self.users = None
+        self.current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.persistent_directory = os.path.join(self.current_dir, "db", "chroma_db")
+        self.transliterator = UzTransliterator.UzTransliterator()
 
     def _get_item_data(self):
         return {
@@ -327,29 +337,109 @@ class AIProductManager:
 
         return all_products
 
+    async def embedding_function(self):
+        if os.path.exists(self.persistent_directory):
+            shutil.rmtree(self.persistent_directory)
 
-async def get_advert():
-    manager = AIProductManager()
-    await manager.login()
-    model = ChatOpenAI(model="gpt-4.1-mini")
-    clients = await manager.get_clients()
-    await manager.get_orders()
-    items = await manager.get_items()
-    items_str = "\n".join(
-        [f"id: {p['id']}, name: {p['name']}, price: {p['price']}" for p in items]
-    )
-    for client in clients:
-        text = ""
-        text_2 = f"Mijoz: {client.get('name')} (ID: {client.get('CS_id')} Phone number: {client.get('tel')})"
-        orders = await manager.get_3_months_purchases(client_id=client['CS_id'])
-        for order in orders:
-            text += f"""
+        await self.login()
+        await self.get_items()
+
+        docs = []
+        for item in self.items:
+            name = (item.get("name") or "").strip()
+            cs_id = item.get("id")
+            price = item.get("price")
+            if not name or not cs_id:
+                continue
+
+            metadata = {
+                "id": cs_id,
+                "name": name,
+                "price": price
+            }
+
+            doc = Document(page_content=name, metadata=metadata)
+            docs.append(doc)
+
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+        Chroma.from_documents(
+            documents=docs,
+            embedding=embeddings,
+            persist_directory=self.persistent_directory
+        )
+
+    def search_query(self, query: str,
+                     k: int = 5,
+                     score_threshold: float = 0.3) -> List[Dict]:
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+        db = Chroma(persist_directory=self.persistent_directory,
+                    embedding_function=embeddings)
+
+        retriever = db.as_retriever(
+            search_type="similarity_score_threshold",
+            search_kwargs={"k": k, "score_threshold": score_threshold}
+        )
+
+        results = retriever.invoke(query)
+
+        response = []
+        for doc in results:
+            metadata = doc.metadata
+            response.append({
+                "name": metadata.get("name", "NOMA'LUM"),
+                "id": metadata.get("id", "NOMA'LUM"),
+                "price": metadata.get("price", "NOMA'LUM"),
+            })
+
+        return response
+
+    def embedding_search(self, item_name: str) -> str:
+        item_name_cyr = self.transliterator.transliterate(item_name, from_="lat", to="cyr")
+        results = self.search_query(item_name_cyr, k=5, score_threshold=0.5)
+
+        context = ""
+        for i, match in enumerate(results, 1):
+            name = match.get("name", "NOMA‘LUM")
+            cs_id = match.get("id", "NOMA‘LUM")
+            price = match.get("price", "NOMA‘LUM")
+
+            context += f"{i}) 📦 Nomi: {name}\n   🆔 ID: {cs_id}\n   💰 Narxi: {price} so‘m\n\n"
+
+        return context.strip()
+
+    async def get_advert(self):
+        await self.login()
+        model = ChatOpenAI(model="gpt-4.1-mini")
+        await self.get_items()
+        clients = await self.get_clients()
+        await self.get_orders()
+        sum = 0
+        for client in clients:
+            if sum > 1500:
+                await self.bot.send_message(self.admin, "1500 dan oshib ketdi")
+                return
+            text = ""
+            text_2 = f"Mijoz: {client.get('name')} (ID: {client.get('CS_id')} Phone number: {client.get('tel')})"
+            text_3 = ""
+            orders = await self.get_3_months_purchases(client_id=client['CS_id'])
+            if not orders:
+                continue
+            sum += 1
+            for order in orders:
+                text += f"""
 Name: {order['name']}
 Quantity: {order['quantity']}"""
-        if text != "":
-            messages = [
-                SystemMessage(content="c"),
-                HumanMessage(content=f"""
+                results = self.search_query(order['name'])
+                for item in results:
+                    text_3 += f"""
+Id: {item['id']}
+Name: {item['name']}
+Price: {item['price']}
+"""
+            if text != "":
+                messages = [
+                    SystemMessage(content="c"),
+                    HumanMessage(content=f"""
 Quyida foydalanuvchi so‘nggi 3 oyda xarid qilgan mahsulotlar ro‘yxati va barcha mavjud mahsulotlar ro‘yxati berilgan. Xarid tendensiyalarini hisobga olgan holda, foydalanuvchi keyingi xaridlarda ehtimoliy sotib olishi mumkin bo‘lgan eng yuqori 10 ta mahsulotni aniqlang.
 
 Faqat mahsulot ID’larini chiqarib bering — hech qanday matn, izoh yoki izohsiz. Faqat `id1 id2 id3 ...` ko‘rinishida bo‘lsin.
@@ -360,69 +450,67 @@ Faqat mahsulot ID’larini chiqarib bering — hech qanday matn, izoh yoki izohs
 🛒 Foydalanuvchi xarid qilgan mahsulotlar:
 {text}
 
-📦 Mavjud mahsulotlar:
-{items_str}"""),
-            ]
-            result = model.invoke(messages)
-            recommend_items = manager.get_items_by_cs_id(result.content.strip().split())
-            client_phone = manager.normalize_phone(client.get("tel"))
-            user_id = None
+📦 Embedding angling mahsulotlar(har bir mahsulot uchun threshold=0.3, k = 5):
+{text_3}"""),
+                ]
+                result = model.invoke(messages)
+                recommend_items = self.get_items_by_cs_id(result.content.strip().split())
+                client_phone = self.normalize_phone(client.get("tel"))
+                user_id = None
+                for user in self.users:
+                    user_phone = self.normalize_phone(user.get("phone_number"))
+                    if client_phone and user_phone and client_phone == user_phone:
+                        user_id = user.get("chat_id")
+                        break
 
-            for user in manager.users:
-                user_phone = manager.normalize_phone(user.get("phone_number"))
-                if client_phone and user_phone and client_phone == user_phone:
-                    user_id = user.get("chat_id")
-                    break
+                for item in recommend_items:
+                    name = item.get('name') or 'None'
+                    price = item.get('price')
+                    price_str = f"{price:,}" if isinstance(price, (int, float)) else 'None'
 
-            for item in recommend_items:
-                name = item.get('name') or 'None'
-                price = item.get('price')
-                price_str = f"{price:,}" if isinstance(price, (int, float)) else 'None'
-
-                user_caption = f"""
+                    user_caption = f"""
 🎯 <b>{name}</b>
 
 💸 <b>Цена:</b> {price_str} so‘m
 
 🛍 <i>Возможно, вам это как раз нужно!</i>
-"""
-                if user_id:
-                    try:
-                        if item.get('imageUrl'):
-                            await manager.bot.send_photo(
-                                chat_id=user_id,
-                                photo=Config.URL[:28] + item['imageUrl'],
-                                caption=user_caption.strip(),
-                                parse_mode="HTML"
-                            )
-                        else:
-                            await manager.bot.send_message(
-                                chat_id=user_id,
-                                text=user_caption.strip(),
-                                parse_mode="HTML")
-                    except:
-                        pass
-
-            user_info = f"""
+    """
+                    if user_id:
+                        try:
+                            if item.get('imageUrl'):
+                                await self.bot.send_photo(
+                                    chat_id=user_id,
+                                    photo=Config.URL[:28] + item['imageUrl'],
+                                    caption=user_caption.strip(),
+                                    parse_mode="HTML"
+                                )
+                            else:
+                                await self.bot.send_message(
+                                    chat_id=user_id,
+                                    text=user_caption.strip(),
+                                    parse_mode="HTML")
+                        except:
+                            pass
+                user_info = f"""
 👤 <b>Информация для клиентов</b>
 🆔 ID: <code>{client.get('CS_id')}</code>
 📛 Имя: <b>{client.get('name')}</b>
 📞 Проволока: <code>{client.get('tel')}</code>
             """
 
-            admin_items = ""
-            for item in recommend_items:
-                admin_items += f"""
+                admin_items = ""
+                for item in recommend_items:
+                    admin_items += f"""
 <a href="{Config.URL[:28]}{item['imageUrl']}">📦 <b>{item['name']}</b></a>
 <pre>💰 Narxi: {item['price']:,} so‘m</pre>
-"""
+    """
 
-            admin_message = user_info + "\n" + "<b>🧠 Рекомендуемые продукты:</b>" + admin_items
-            try:
-                await manager.bot.send_message(
-                    chat_id=admin_chat_id,
-                    text=admin_message.strip(),
-                    parse_mode="HTML"
-                )
-            except:
-                pass
+                admin_message = user_info + "\n" + "<b>🧠 Рекомендуемые продукты:</b>" + admin_items
+                try:
+                    await self.bot.send_message(
+                        chat_id=admin_chat_id,
+                        text=admin_message.strip(),
+                        parse_mode="HTML"
+                    )
+                except:
+                    pass

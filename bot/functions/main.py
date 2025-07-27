@@ -25,11 +25,11 @@ async def on_startup(dp: Dispatcher):
         daily_check,
         trigger=CronTrigger(hour=8, minute=0, timezone=timezone("Asia/Tashkent")),
     )
-
-    scheduler.add_job(
-        func=lambda: asyncio.run(run_get_advert()),
-        trigger=CronTrigger(hour=14, minute=23, timezone=timezone("Asia/Tashkent")),
-    )
+    #
+    # scheduler.add_job(
+    #     func=lambda: asyncio.run(run_get_advert()),
+    #     trigger=CronTrigger(hour=14, minute=23, timezone=timezone("Asia/Tashkent")),
+    # )
 
     scheduler.add_job(
         delete_expired_debts,

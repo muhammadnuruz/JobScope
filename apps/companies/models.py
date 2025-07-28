@@ -7,6 +7,7 @@ class Companies(models.Model):
     link = models.CharField("Линк", blank=True, null=True)
     group_id = models.CharField("Групповой идентификатор", max_length=50, null=True, blank=True)
     is_approved = models.BooleanField("Одобрено админом", default=False)
+    ball = models.IntegerField("Балл", default=0)
     created_at = models.DateTimeField("Дата создания", auto_now_add=True)
     updated_at = models.DateTimeField("Дата обновления", auto_now=True)
     managers = models.ManyToManyField(

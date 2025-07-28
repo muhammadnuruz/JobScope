@@ -6,7 +6,7 @@ from aiogram.types import InlineQueryResultArticle, InputTextMessageContent, Cal
 from uuid import uuid4
 import requests
 
-from bot.buttons.inline_buttons import make_application_button
+from bot.buttons.inline_buttons import make_application_button, show_application_button
 from bot.buttons.text import search_companies, all_companies
 from bot.dispatcher import dp, bot
 from bot.states import SearchCompanyState
@@ -132,21 +132,77 @@ async def submit_application(msg: types.Message, state: FSMContext):
     user = requests.get(f"{USER_URL}{msg.from_user.id}/").json()
     location_link = f"https://maps.google.com/?q={user['location_lat']},{user['location_lng']}"
     try:
-        await bot.send_message(
-            chat_id=res_company['group_id'],
-            text=(
-                f"📥 Новое приложение!\n"
-                f"👤 Пользователь: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.full_name}</a>\n"
-                f"📲 Номер телефона: {user['phone_number']}\n"
-                f"🏢 Компания: {res_company['name']}\n"
-                f"💰 Предлагаемая сумма: {amount}\n"
-                f"📍 <a href='{location_link}'>Расположение</a>"
-            ),
-            parse_mode="HTML"
-        )
-    except Exception:
-        pass
+        if res_company['ball'] > 0:
+            await bot.send_message(
+                chat_id=res_company['group_id'],
+                text=(
+                    f"📥 Новое приложение!\n"
+                    f"👤 Пользователь: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.full_name}</a>\n"
+                    f"📲 Номер телефона: {user['phone_number']}\n"
+                    f"🏢 Компания: {res_company['name']}\n"
+                    f"💰 Предлагаемая сумма: {amount}\n"
+                    f"📍 <a href='{location_link}'>Расположение</a>\n"
+                    f"🪙 Количество оставшихся баллов: {res_company['ball'] - 1}"
+                ),
+                parse_mode="HTML"
+            )
+            requests.patch(url=f"{API_URL}{data['company_id']}/", data={"ball": res_company['ball'] - 1})
+        else:
+            await bot.send_message(
+                chat_id=res_company['group_id'],
+                text=(
+                    f"📥 Новое приложение!\n"
+                    f"🏢 Компания: {res_company['name']}\n"
+                    f"💰 Предлагаемая сумма: {amount}\n"
+                    f"🪙 Количество оставшихся баллов: {res_company['ball']}"
+                ),
+                parse_mode="HTML", reply_markup=await show_application_button(
+                    response.json(),
+                    msg.from_user.id,
+                    user['phone_number'],
+                    location_link[27:],
+                    amount
+                ))
+    except Exception as e:
+        print(e)
     await state.finish()
+
+
+@dp.callback_query_handler(lambda c: c.data.startswith("see_"))
+async def show_full_application_callback(callback_query: types.CallbackQuery):
+    try:
+        data = callback_query.data.split("_")
+        company_id = int(data[1])
+        user_id = int(data[2])
+        phone_number = data[3]
+        location_coords = data[4]
+        amount = data[5]
+        location_link = f"https://maps.google.com/?q={location_coords}"
+
+        res_company = requests.get(f"{API_URL}{company_id}/").json()
+
+        if res_company['ball'] > 0:
+            requests.patch(url=f"{API_URL}{company_id}/", data={"ball": res_company['ball'] - 1})
+            await bot.send_message(
+                chat_id=callback_query.from_user.id,
+                text=(
+                    f"🫣 Полная информация по заявке:\n\n"
+                    f"👤 Пользователь: <a href='tg://user?id={user_id}'>{user_id}</a>\n"
+                    f"📲 Номер телефона: {phone_number}\n"
+                    f"🏢 Компания: {res_company['name']}\n"
+                    f"💰 Предлагаемая сумма: {amount}\n"
+                    f"📍 <a href='{location_link}'>Расположение</a>\n"
+                    f"🪙 Количество оставшихся баллов: {res_company['ball'] - 1}"
+                ),
+                parse_mode="HTML"
+            )
+            await callback_query.message.delete()
+        else:
+            await callback_query.answer("У компании нет баллов для просмотра.", show_alert=True)
+
+    except Exception as e:
+        print(f"[ERROR]: {e}")
+        await callback_query.answer("⚠️ Ошибка при обработке запроса.", show_alert=True)
 
 
 @dp.callback_query_handler(lambda c: c.data.startswith("become_favourite_"))

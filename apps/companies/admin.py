@@ -5,7 +5,7 @@ from .models import Companies
 @admin.register(Companies)
 class CompaniesAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'name', 'group_id', 'manager_count', 'employee_count',
+        'id', 'name', 'ball', 'group_id', 'manager_count', 'employee_count',
         'is_approved', 'created_at'
     )
     list_filter = ('is_approved', 'created_at')
@@ -17,7 +17,7 @@ class CompaniesAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('📌 Основная информация', {
-            'fields': ('name', 'description', 'link', 'group_id')
+            'fields': ('name', 'description', 'link', 'ball', 'group_id')
         }),
         ('👥 Персонал', {
             'fields': ('managers', 'employees')

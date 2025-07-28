@@ -1,5 +1,5 @@
 from rest_framework import viewsets, filters
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny
 
 from apps.companies.models import Companies
@@ -14,7 +14,13 @@ class CompanyViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
 
-class CompanyDetailViewSet(RetrieveAPIView):
+# class CompanyDetailViewSet(RetrieveAPIView):
+#     queryset = Companies.objects.all()
+#     serializer_class = CompaniesSerializer
+#     permission_classes = [AllowAny]
+
+
+class CompanyDetailViewSet(RetrieveUpdateAPIView):
     queryset = Companies.objects.all()
     serializer_class = CompaniesSerializer
     permission_classes = [AllowAny]

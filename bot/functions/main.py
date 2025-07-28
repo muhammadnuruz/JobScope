@@ -26,10 +26,10 @@ async def on_startup(dp: Dispatcher):
         trigger=CronTrigger(hour=8, minute=0, timezone=timezone("Asia/Tashkent")),
     )
 
-    scheduler.add_job(
-        run_get_advert,
-        trigger=CronTrigger(hour=11, minute=00, timezone=timezone("Asia/Tashkent")),
-    )
+    # scheduler.add_job(
+    #     run_get_advert,
+    #     trigger=CronTrigger(hour=16, minute=16, second=30, timezone=timezone("Asia/Tashkent")),
+    # )
 
     scheduler.add_job(
         delete_expired_debts,

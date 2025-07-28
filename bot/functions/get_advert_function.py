@@ -411,21 +411,21 @@ class AIProductManager:
 
     async def get_advert(self):
         await self.login()
-        # model = ChatOpenAI(model="gpt-4.1-mini")
+        model = ChatOpenAI(model="gpt-4.1-mini")
         await self.get_items()
         clients = await self.get_clients()
         await self.get_orders()
-        await self.bot.send_message(self.admin, text=f"{len(clients)} - aktiv klient mavjud")
-#         for client in clients:
-#             await asyncio.sleep(5)
-#             print(sum)
-#             text = ""
-#             text_2 = f"Mijoz: {client.get('name')} (ID: {client.get('CS_id')} Phone number: {client.get('tel')})"
-#             text_3 = ""
-#             orders = await self.get_3_months_purchases(client_id=client['CS_id'])
-#             if not orders:
-#                 continue
-#             sum += 1
+        sum1 = 0
+        for client in clients:
+            # await asyncio.sleep(5)
+            # text = ""
+            # text_2 = f"Mijoz: {client.get('name')} (ID: {client.get('CS_id')} Phone number: {client.get('tel')})"
+            # text_3 = ""
+            orders = await self.get_3_months_purchases(client_id=client['CS_id'])
+            if not orders:
+                continue
+            sum1+=1
+        await self.bot.send_message(admin_chat_id, f"{sum1}-ta mijoz tahlil qilinadi")
 #             for order in orders:
 #                 text += f"""
 # Name: {order['name']}

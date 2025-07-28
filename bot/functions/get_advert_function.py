@@ -453,7 +453,7 @@ class AIProductManager:
 
         for client in clients:
             text = ""
-            text_2 = f"Mijoz: {client.get('name', 'Noma\'lum')} (ID: {client.get('CS_id', 'Noma\'lum')} Phone number: {client.get('tel', 'Noma\'lum')})"
+            text_2 = f"Mijoz: {client.get('name', 'Noma`lum')} (ID: {client.get('CS_id', 'Noma\'lum')} Phone number: {client.get('tel', 'Noma\'lum')})"
             text_3 = ""
             orders = await self.get_3_months_purchases(client_id=client.get('CS_id', ''))
             if not orders:

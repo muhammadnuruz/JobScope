@@ -415,7 +415,7 @@ class AIProductManager:
         await self.get_items()
         clients = await self.get_clients()
         await self.get_orders()
-        await self.bot.send_message(admin_chat_id, text=f"{len(clients)} - aktiv klient mavjud")
+        await self.bot.send_message(self.admin, text=f"{len(clients)} - aktiv klient mavjud")
 #         for client in clients:
 #             await asyncio.sleep(5)
 #             print(sum)

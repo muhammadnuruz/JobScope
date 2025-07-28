@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import InlineQueryResultArticle, InputTextMessageContent, CallbackQuery
@@ -25,7 +27,7 @@ async def inline_company_search(inline_query: types.InlineQuery):
 
     if response.status_code == 200:
         data = response.json()
-        for company in data.get("results", [])[:30]:
+        for company in data.get("results", [])[:10]:
             results.append(
                 InlineQueryResultArticle(
                     id=str(uuid4()),
@@ -68,6 +70,7 @@ async def get_all_companies(msg: types.Message):
                     text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>",
                     reply_markup=await make_application_button(company['id'])
                 )
+                await asyncio.sleep(0.5)
     else:
         await msg.answer("❗ Произошла ошибка при поиске..")
 

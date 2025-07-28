@@ -131,9 +131,9 @@ async def update_location(msg: types.Message):
         await msg.answer("❗ Произошла ошибка при обновлении локации.")
 
 
-@dp.message_handler(commands='restart')
-async def restart(msg: types.Message):
-    manager = AIProductManager()
-    await manager.login()
-    await manager.embedding_function()
-    await msg.answer("Baza yangilandi!")
+# @dp.message_handler(commands='restart')
+# async def restart(msg: types.Message):
+#     manager = AIProductManager()
+#     await manager.login()
+#     await manager.embedding_function()
+#     await msg.answer("Baza yangilandi!")

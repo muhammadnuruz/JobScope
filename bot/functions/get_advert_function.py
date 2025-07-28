@@ -411,7 +411,7 @@ class AIProductManager:
 
     async def get_advert(self):
         await self.login()
-        model = ChatOpenAI(model="gpt-4.1-mini")
+        # model = ChatOpenAI(model="gpt-4.1-mini")
         await self.get_items()
         clients = await self.get_clients()
         await self.get_orders()

@@ -453,7 +453,7 @@ class AIProductManager:
 
         for client in clients:
             text = ""
-            text_2 = f"Mijoz: {client.get('name', 'Noma`lum')} (ID: {client.get('CS_id', 'Noma\'lum')} Phone number: {client.get('tel', 'Noma\'lum')})"
+            text_2 = f"Mijoz: {client.get('name', 'Noma`lum')} (ID: {client.get('CS_id', 'Noma`lum')} Phone number: {client.get('tel', 'Noma`lum')})"
             text_3 = ""
             orders = await self.get_3_months_purchases(client_id=client.get('CS_id', ''))
             if not orders:
@@ -473,8 +473,8 @@ Quantity: {order.get('quantity', 0)}"""
                 results = self.search_query(order_name)
                 for item in results:
                     text_3 += f"""
-Id: {item.get('id', 'NOMA\'LUM')}
-Name: {item.get('name', 'NOMA\'LUM')}
+Id: {item.get('id', 'NOMA`LUM')}
+Name: {item.get('name', 'NOMA`LUM')}
 Price: {item.get('price', 0)}
 """
 
@@ -515,9 +515,9 @@ Faqat mahsulot ID'larini chiqarib bering — hech qanday matn, izoh yoki izohsiz
                                 break
 
                     for item in recommend_items:
-                        name = item.get('name', 'Noma\'lum mahsulot')
+                        name = item.get('name', 'Noma`lum mahsulot')
                         price = item.get('price', 0)
-                        price_str = f"{price:,}" if isinstance(price, (int, float)) and price > 0 else 'Noma\'lum'
+                        price_str = f"{price:,}" if isinstance(price, (int, float)) and price > 0 else 'Noma`lum'
 
                         user_caption = f"""
 🎯 <b>{name}</b>
@@ -547,14 +547,14 @@ Faqat mahsulot ID'larini chiqarib bering — hech qanday matn, izoh yoki izohsiz
 
                     user_info = f"""
 👤 <b>Информация для клиентов</b>
-🆔 ID: <code>{client.get('CS_id', 'Noma\'lum')}</code>
-📛 Имя: <b>{client.get('name', 'Noma\'lum')}</b>
-📞 Проволока: <code>{client.get('tel', 'Noma\'lum')}</code>
+🆔 ID: <code>{client.get('CS_id', 'Noma`lum')}</code>
+📛 Имя: <b>{client.get('name', 'Noma`lum')}</b>
+📞 Проволока: <code>{client.get('tel', 'Noma`lum')}</code>
                 """
 
                     admin_items = ""
                     for item in recommend_items:
-                        item_name = item.get('name', 'Noma\'lum mahsulot')
+                        item_name = item.get('name', 'Noma`lum mahsulot')
                         item_price = item.get('price', 0)
                         image_url = item.get('imageUrl', '').strip()
 

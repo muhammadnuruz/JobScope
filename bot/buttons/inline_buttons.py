@@ -22,6 +22,7 @@ def complete_task_button(task_id: int):
 
 
 async def show_application_button(data: dict, user_id: int, phone_number: str, location_link: str, amount: str):
+    print(len(f"see_{data['company']}_{user_id}_{phone_number}_{location_link}_{amount}"))
     markup = InlineKeyboardMarkup()
     button = InlineKeyboardButton(
         text="🫣 Посмотреть полный заказ",

@@ -182,12 +182,13 @@ async def show_full_application_callback(callback_query: types.CallbackQuery):
         res_company = requests.get(f"{API_URL}{company_id}/").json()
 
         if res_company['ball'] > 0:
+            telegram_user = requests.get(f"{USER_URL}{user_id}").json()
             requests.patch(url=f"{API_URL}{company_id}/", data={"ball": res_company['ball'] - 1})
             await bot.send_message(
-                chat_id=callback_query.from_user.id,
+                chat_id=callback_query.message.chat.id,
                 text=(
                     f"🫣 Полная информация по заявке:\n\n"
-                    f"👤 Пользователь: <a href='tg://user?id={user_id}'>{user_id}</a>\n"
+                    f"👤 Пользователь: <a href='tg://user?id={user_id}'>{telegram_user['full_name']}</a>\n"
                     f"📲 Номер телефона: {phone_number}\n"
                     f"🏢 Компания: {res_company['name']}\n"
                     f"💰 Предлагаемая сумма: {amount}\n"

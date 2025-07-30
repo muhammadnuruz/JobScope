@@ -31,8 +31,7 @@ class APIClient:
         res = requests.get(self.url, json=data).json()
         result = []
         print(type(res))
-        print(type(res['result']))
-        for category in res['result']['productCategory']:
+        for category in res['result'][0]:
             if category['active'] == "Y":
                 result.append(category)
         return result

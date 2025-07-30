@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Категории{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-6 text-center">Категории товаров</h1>
+
+<ul class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  {% for cat in categories %}
+  <li>
+    <a href="{% url 'product_list' cat.CS_id %}"
+       class="block bg-white shadow rounded-xl p-4 text-center hover:shadow-md transition hover:bg-gray-50">
+      <span class="text-lg font-semibold">{{ cat.name }}</span>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+
+{% if not categories %}
+<div class="text-center mt-8 text-gray-500 text-lg">Категории не найдены.</div>
+{% endif %}
+{% endblock %}

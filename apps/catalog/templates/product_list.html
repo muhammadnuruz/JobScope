@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Товары{% endblock %}
+
+{% block extra_head %}
+<script>
+let page = 2;
+let loading = false;
+
+async function loadMore() {
+  if (loading) return;
+  loading = true;
+  const res = await fetch(`/load-more/{{ category_id }}/${page}/`);
+  const data = await res.json();
+  if (data.products.length > 0) {
+    const container = document.getElementById('product-container');
+    data.products.forEach(p => {
+      const div = document.createElement('div');
+      div.className = "bg-white shadow p-3 rounded-xl";
+      div.innerHTML = `
+        <img src="{{ config_url|slice:":28" }}${p.imageUrl || ''}" class="w-full h-48 object-contain mb-2 rounded bg-white">
+        <h2 class="font-semibold text-base text-center mb-1">${p.name}</h2>
+        <p class="text-center text-green-600 font-bold">${p.price} сум</p>
+      `;
+      container.appendChild(div);
+    });
+    page += 1;
+  }
+  loading = false;
+}
+window.onscroll = () => {
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+    loadMore();
+  }
+};
+</script>
+{% endblock %}
+
+{% block content %}
+<a href="/" class="text-blue-600 underline block mb-4">⬅ Назад к категориям</a>
+
+<h1 class="text-2xl font-bold mb-6 text-center">Товары</h1>
+<div id="product-container" class="grid grid-cols-2 gap-4">
+  {% for product in products %}
+  <div class="bg-white shadow p-3 rounded-xl">
+    <img src="{{ config_url|slice:':28' }}{{ product.imageUrl }}" class="w-full h-48 object-contain mb-2 rounded bg-white">
+    <h2 class="font-semibold text-base text-center mb-1">{{ product.name }}</h2>
+    <p class="text-center text-green-600 font-bold">{{ product.price }} сум</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

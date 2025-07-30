@@ -24,6 +24,7 @@ class APIClient:
             self.user_id = res["result"]["userId"]
 
     def get_categories(self):
+        self.login()
         data = {
             "method": "getProductCategory",
             "auth": {"userId": self.user_id, "token": self.token}
@@ -69,7 +70,7 @@ class APIClient:
         item_list = []
         prices = self.get_prices()
         for item in res['result']['product']:
-            if item.get("active") == "N" or item['category']['CS_id'] != category_id:
+            if item['category']['CS_id'] != category_id:
                 continue
             cs_id = item.get("CS_id")
             name = item.get("name", "").strip()

@@ -11,7 +11,7 @@ def category_list(request):
     return render(request, 'category_list.html', {'categories': categories})
 
 def product_list(request, category_id):
-    products = client.get_products(category_id, page=1)
+    products = client.get_products(category_id)
     return render(request, 'product_list.html', {
         'products': products,
         'category_id': category_id,

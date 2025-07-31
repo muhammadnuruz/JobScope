@@ -16,11 +16,11 @@ async function loadMore() {
     const container = document.getElementById('product-container');
     data.products.forEach(p => {
       const div = document.createElement('div');
-      div.className = "bg-white shadow p-3 rounded-xl";
+      div.className = "bg-white shadow p-3 rounded-xl transition hover:scale-[1.02]";
       div.innerHTML = `
-        <img src="{{ config_url|slice:":28" }}${p.imageUrl || ''}" class="w-full h-48 object-contain mb-2 rounded bg-white">
-        <h2 class="font-semibold text-base text-center mb-1">${p.name}</h2>
-        <p class="text-center text-green-600 font-bold">${p.price} сум</p>
+        <img src="{{ config_url|slice:":28" }}${p.imageUrl || ''}" class="w-full h-60 object-contain mb-2 rounded bg-white">
+        <h2 class="font-semibold text-sm text-center mb-1">${p.name}</h2>
+        <p class="text-center text-green-600 text-xl font-extrabold">${p.price} сум</p>
       `;
       container.appendChild(div);
     });
@@ -37,15 +37,23 @@ window.onscroll = () => {
 {% endblock %}
 
 {% block content %}
-<a href="/" class="text-blue-600 underline block mb-4">⬅ Назад к категориям</a>
+
+<!-- Go Back Button Styled -->
+<a href="/" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium shadow hover:shadow-lg transition mb-6">
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+  </svg>
+  Назад к категориям
+</a>
 
 <h1 class="text-2xl font-bold mb-6 text-center">Товары</h1>
+
 <div id="product-container" class="grid grid-cols-2 gap-4">
   {% for product in products %}
-  <div class="bg-white shadow p-3 rounded-xl">
-    <img src="{{ config_url|slice:':28' }}{{ product.imageUrl }}" class="w-full h-48 object-contain mb-2 rounded bg-white">
-    <h2 class="font-semibold text-base text-center mb-1">{{ product.name }}</h2>
-    <p class="text-center text-green-600 font-bold">{{ product.price }} сум</p>
+  <div class="bg-white shadow p-3 rounded-xl transition hover:scale-[1.02]">
+    <img src="{{ config_url|slice:':28' }}{{ product.imageUrl }}" class="w-full h-60 object-contain mb-2 rounded bg-white">
+    <h2 class="font-semibold text-sm text-center mb-1">{{ product.name }}</h2>
+    <p class="text-center text-green-600 text-xl font-extrabold">{{ product.price }} сум</p>
   </div>
   {% endfor %}
 </div>

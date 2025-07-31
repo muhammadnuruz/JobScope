@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block title %}Товары{% endblock %}
 
 {% block extra_head %}
@@ -15,14 +14,15 @@ async function loadMore() {
   if (data.products.length > 0) {
     const container = document.getElementById('product-container');
     data.products.forEach(p => {
-      const div = document.createElement('div');
-      div.className = "bg-white shadow p-3 rounded-xl transition hover:scale-[1.02]";
-      div.innerHTML = `
+      const a = document.createElement('a');
+      a.href = `/product/${p.id}/`;
+      a.className = "block bg-white shadow p-3 rounded-xl transition hover:scale-[1.02]";
+      a.innerHTML = `
         <img src="{{ config_url|slice:":28" }}${p.imageUrl || ''}" class="w-full h-60 object-contain mb-2 rounded bg-white">
-        <h2 class="font-semibold text-sm text-center mb-1">${p.name}</h2>
+        <h2 class="font-semibold text-sm text-center mb-1">${p.name.length > 40 ? p.name.slice(0, 40) + '...' : p.name}</h2>
         <p class="text-center text-green-600 text-xl font-extrabold">${p.price} сум</p>
       `;
-      container.appendChild(div);
+      container.appendChild(a);
     });
     page += 1;
   }
@@ -37,8 +37,6 @@ window.onscroll = () => {
 {% endblock %}
 
 {% block content %}
-
-<!-- Go Back Button Styled -->
 <a href="/" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium shadow hover:shadow-lg transition mb-6">
   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -63,5 +61,4 @@ window.onscroll = () => {
   </a>
   {% endfor %}
 </div>
-
 {% endblock %}

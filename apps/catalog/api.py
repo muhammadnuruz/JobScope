@@ -60,6 +60,7 @@ class APIClient:
         return []
 
     def get_products(self, category_id, limit=1000):
+        self.login()
         items = []
         for i in range(4):
             data = {
@@ -74,6 +75,38 @@ class APIClient:
         for i in items:
             for item in i:
                 if item['category']['CS_id'] != category_id or item['active'] != "Y":
+                    continue
+                cs_id = item.get("CS_id")
+                name = item.get("name", "").strip()
+                imageUrl = item.get("imageUrl", "")
+                price = prices.get(cs_id, 0)
+
+                if not cs_id or not name:
+                    continue
+                item_list.append({
+                    "id": cs_id,
+                    "name": name,
+                    "price": price,
+                    "imageUrl": imageUrl,
+                })
+        return item_list
+
+    def get_product(self, item_id, limit=1000):
+        self.login()
+        items = []
+        for i in range(4):
+            data = {
+                "method": "getProduct",
+                "auth": {"userId": self.user_id, "token": self.token},
+                "params": {"page": i + 1, "limit": limit}
+            }
+            res = requests.get(self.url, json=data).json()
+            items.append(res['result']['product'])
+        item_list = []
+        prices = self.get_prices()
+        for i in items:
+            for item in i:
+                if item['CS_id'] != item_id or item['active'] != "Y":
                     continue
                 cs_id = item.get("CS_id")
                 name = item.get("name", "").strip()

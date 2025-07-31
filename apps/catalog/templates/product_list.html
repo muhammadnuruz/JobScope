@@ -52,8 +52,13 @@ window.onscroll = () => {
   {% for product in products %}
   <div class="bg-white shadow p-3 rounded-xl transition hover:scale-[1.02]">
     <img src="{{ config_url|slice:':28' }}{{ product.imageUrl }}" class="w-full h-60 object-contain mb-2 rounded bg-white">
-    <h2 class="font-semibold text-sm text-center mb-1">{{ product.name }}</h2>
-    <p class="text-center text-green-600 text-xl font-extrabold">{{ product.price }} сум</p>
+    <h2 class="font-semibold text-sm text-center mb-1">
+    {% if product.name|length > 40 %}
+        {{ product.name|slice:":40" }}...
+    {% else %}
+        {{ product.name }}
+      {% endif %}
+    </h2>    <p class="text-center text-green-600 text-xl font-extrabold">{{ product.price }} сум</p>
   </div>
   {% endfor %}
 </div>

@@ -7,7 +7,6 @@ import requests
 from bot.buttons.reply_buttons import main_menu_buttons
 from bot.buttons.text import skip_txt, back_main_menu, change_location
 from bot.dispatcher import dp, bot
-from bot.functions.get_advert_function import AIProductManager
 from bot.states import RegisterState
 
 
@@ -129,7 +128,6 @@ async def update_location(msg: types.Message):
         await msg.answer("✅ Ваша локация успешно обновлена!", reply_markup=await main_menu_buttons(msg.from_user.id))
     else:
         await msg.answer("❗ Произошла ошибка при обновлении локации.")
-
 
 # @dp.message_handler(commands='restart')
 # async def restart(msg: types.Message):

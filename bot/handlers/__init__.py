@@ -8,3 +8,6 @@ from bot.handlers.display_debts_handler import *
 from bot.handlers.show_near_users_handler import *
 from bot.handlers.get_all_tasks_handler import *
 from bot.handlers.get_employee_tasks_handler import *
+from bot.handlers.display_my_card import *
+from bot.handlers.create_cards_handler import *
+from bot.handlers.ordering_handler import *

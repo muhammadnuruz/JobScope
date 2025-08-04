@@ -5,6 +5,7 @@ from apps.companies.models import Companies
 
 class TelegramUsers(models.Model):
     STATUS_CHOICES = [
+        ('user', 'Пользователь'),
         ('customer', 'Клиент'),
         ('employee', 'Сотрудник'),
         ('manager', 'Менеджер'),
@@ -19,7 +20,7 @@ class TelegramUsers(models.Model):
     photo = models.ImageField("Фото профиля", upload_to='telegram_users/photos/', blank=True, null=True)
     point = models.IntegerField("Награда", default=0, blank=True)
     fine = models.IntegerField("Штраф", default=0, blank=True)
-    status = models.CharField("Статус", max_length=10, default="customer", choices=STATUS_CHOICES)
+    status = models.CharField("Статус", max_length=10, default="user", choices=STATUS_CHOICES)
     favourite_companies = models.ManyToManyField(
         Companies,
         blank=True,

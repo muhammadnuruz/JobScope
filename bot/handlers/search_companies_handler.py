@@ -50,7 +50,7 @@ async def send_company_info(msg: types.Message):
         company = response.json()['results'][0]
         await msg.answer(
             parse_mode="HTML",
-            text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>",
+            text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>\n\nАдрес бота: @TujjorSBot",
             reply_markup=await make_application_button(company['id'])
         )
 
@@ -67,7 +67,7 @@ async def get_all_companies(msg: types.Message):
             for company in companies['results']:
                 await msg.answer(
                     parse_mode="HTML",
-                    text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>",
+                    text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>\n\nАдрес бота: @TujjorSBot",
                     reply_markup=await make_application_button(company['id'])
                 )
                 await asyncio.sleep(0.5)
@@ -95,7 +95,7 @@ async def perform_search(msg: types.Message, state: FSMContext):
             for company in companies['results']:
                 await msg.answer(
                     parse_mode="HTML",
-                    text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>",
+                    text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>\n\nАдрес бота: @TujjorSBot",
                     reply_markup=await make_application_button(company['id'])
                 )
     else:

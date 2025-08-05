@@ -25,12 +25,12 @@ class OrdersAdmin(admin.ModelAdmin):
     fields = ('user', 'shop', 'cards_pretty', 'total_sum', 'created_at', 'updated_at')
 
     def user_info(self, obj):
-        return f"{obj.user.full_name} ({obj.user.telegram_id})"
+        return obj.user.full_name
 
     user_info.short_description = "Покупатель"
 
     def shop_info(self, obj):
-        return f"{obj.shop.full_name} ({obj.shop.telegram_id})"
+        return obj.shop.full_name
 
     shop_info.short_description = "Продавец"
 

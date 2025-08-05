@@ -8,6 +8,8 @@ from datetime import timedelta, datetime
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'JobScope.settings')
 django.setup()
 
+from apps.tasks.models import Task
+from apps.orders.models import Orders
 from apps.basket.models import Basket
 from apps.telegram_users.models import TelegramUsers
 from apps.cards.models import Cards
@@ -108,6 +110,14 @@ def delete_card_by_id(id_: int) -> bool:
 
 
 @sync_to_async
+def get_task_by_id(id_: int) -> Task | None:
+    try:
+        return Task.objects.select_related("user", "company").get(id=id_)
+    except Task.DoesNotExist:
+        return None
+
+
+@sync_to_async
 def save_card_to_db(chat_id: int, imageUrl: str, name: str, price: int):
     try:
         user = TelegramUsers.objects.get(chat_id=chat_id)
@@ -143,3 +153,42 @@ def get_baskets(shop_id: int, user_id: int):
         Basket.objects.select_related("user", "shop", "card")
         .filter(shop_id=shop_id, user_id=user_id)
     )
+
+
+@sync_to_async
+def create_order_from_basket(user: int, shop: int) -> Orders | None:
+    baskets = Basket.objects.select_related("card").filter(user_id=user, shop_id=shop)
+
+    if not baskets.exists():
+        return None
+
+    cards_data = []
+    total_sum = 0
+
+    for basket in baskets:
+        cards_data.append({
+            "card_id": basket.card.id,
+            "name": basket.card.name,
+            "count": basket.count,
+            "price": basket.card.price
+        })
+        total_sum += basket.card.price * basket.count
+
+    order = Orders.objects.create(
+        user=user,
+        shop=shop,
+        cards=cards_data,
+        total_sum=total_sum
+    )
+
+    baskets.delete()
+
+    return order
+
+
+@sync_to_async
+def get_user_orders(user_id: int, as_client=True):
+    if as_client:
+        return list(Orders.objects.select_related("user", "shop").filter(user_id=user_id))
+    else:
+        return list(Orders.objects.select_related("user", "shop").filter(shop_id=user_id))

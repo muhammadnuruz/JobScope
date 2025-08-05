@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, KeyboardButtonRequestChat, ChatAdministratorRights
 
 from bot.buttons.text import back_main_menu, adverts, none_advert, forward_advert, change_location, favourite_companies, \
     search_companies, near_shops, active_tasks, all_active_tasks, create_task, all_companies, create_debt, \
@@ -76,3 +76,28 @@ async def amount_button():
         [KeyboardButton(back_main_menu)],
     ]
     return ReplyKeyboardMarkup(keyboard=design, resize_keyboard=True)
+
+
+def request_chat_reply_keyboard(card_id: int) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [
+                KeyboardButton(
+                    text="📢 Выбрать (канал/группу)",
+                    request_chat=KeyboardButtonRequestChat(
+                        request_id=card_id,
+                        chat_is_channel=True,
+                        bot_is_member=False,
+                        user_administrator_rights=ChatAdministratorRights(
+                            can_post_messages=True
+                        ),
+                        bot_administrator_rights=ChatAdministratorRights(
+                            can_post_messages=True
+                        )
+                    )
+                )
+            ]
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )

@@ -1,6 +1,6 @@
 from aiogram.types import CallbackQuery
 
-from bot.config import get_card_by_id, get_user_by_chat_id, save_basket_to_db, get_baskets
+from bot.config import get_card_by_id, get_user_by_chat_id, save_basket_to_db, get_baskets, create_order_from_basket
 from bot.dispatcher import dp
 
 
@@ -16,12 +16,51 @@ async def ordering_function(call: CallbackQuery):
         await call.answer(f"⛔ Сначала зарегистрируйтесь у бота.\n\n👉 t.me/TujjorSBot", show_alert=True)
 
 
+def format_order_message(order) -> str:
+    lines = [f"🧾 Заказ от: {order.user.full_name}"]
+    lines.append(f"👤 Telegram ID: {order.user.chat_id}")
+    lines.append(f"🛍 Продавец: {order.shop.full_name}")
+    lines.append("\n📦 Товары:")
+
+    for idx, item in enumerate(order.cards, start=1):
+        lines.append(
+            f"{idx}. {item['name']} — {item['count']} шт. × {item['price']} сум = {item['count'] * item['price']} сум"
+        )
+
+    lines.append(f"\n💰 Общая сумма: {order.total_sum} сум")
+    lines.append(f"📅 Дата: {order.created_at.strftime('%d.%m.%Y %H:%M')}")
+
+    return "\n".join(lines)
+
+
 @dp.callback_query_handler(lambda c: c.data.startswith("close_order_"))
 async def ordering_function_2(call: CallbackQuery):
     tg_user = await get_user_by_chat_id(call.from_user.id)
-    if tg_user:
-        id_ = call.data.split("_")[-1]
-        card = await get_card_by_id(id_=id_)
-        baskets = await get_baskets(shop_id=card.user.id, user_id=tg_user.id)
-    else:
-        await call.answer(f"⛔ Сначала зарегистрируйтесь у бота.\n\n👉 t.me/TujjorSBot", show_alert=True)
+    if not tg_user:
+        await call.answer(
+            "⛔ Сначала зарегистрируйтесь у бота.\n\n👉 t.me/TujjorSBot",
+            show_alert=True
+        )
+        return
+
+    id_ = call.data.split("_")[-1]
+    card = await get_card_by_id(id_=id_)
+    if not card:
+        await call.answer("⛔ Карточка не найдена.", show_alert=True)
+        return
+
+    shop = card.user
+    order = await create_order_from_basket(user=tg_user, shop=shop)
+
+    if not order:
+        await call.answer("⛔ Ваша корзина пуста.", show_alert=True)
+        return
+
+    text = format_order_message(order)
+
+    await call.bot.send_message(chat_id=call.from_user.id, text=f"✅ Ваш заказ успешно оформлен!\n\n" + text)
+
+    try:
+        await call.bot.send_message(chat_id=shop.chat_id, text=f"🆕 Новый заказ!\n\n{text}")
+    except Exception:
+        pass

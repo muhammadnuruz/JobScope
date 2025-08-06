@@ -13,6 +13,7 @@ async def my_orders_handler(message: Message):
     if not tg_user:
         await message.answer("⛔ Сначала зарегистрируйтесь у бота.")
         return
+
     if tg_user.status == "customer":
         orders = await get_user_orders(user_id=tg_user.id, as_client=True)
     else:
@@ -26,13 +27,17 @@ async def my_orders_handler(message: Message):
         text = f"📦 Заказ №{order.id}\n"
         text += f"👤 Покупатель: {order.user.full_name}\n"
         text += f"🏪 Продавец: {order.shop.full_name}\n"
+
         if tg_user.status == "customer":
             text += f"📲 Номер телефона: {order.shop.phone_number}\n"
         else:
             text += f"📲 Номер телефона: {order.user.phone_number}\n"
+
         text += f"🛒 Состав заказа:\n"
         for item in order.cards:
             name = item.get("name", "—")
-            price = item.get("price", "—")
-            text += f"• {name} — {price} сум\n"
+            price = item.get("price", 0)
+            formatted_price = f"{price:,}".replace(",", " ")
+            text += f"• {name} — {formatted_price} сум\n"
+
         await message.answer(text)

@@ -29,11 +29,13 @@ def format_order_message(order) -> str:
     lines.append("\n📦 Товары:")
 
     for idx, item in enumerate(order.cards, start=1):
+        total_price = item['count'] * item['price']
         lines.append(
-            f"{idx}. {item['name']} — {item['count']} шт. × {item['price']} сум = {item['count'] * item['price']} сум"
+            f"{idx}. {item['name']} — {item['count']} шт. × {item['price']:,}".replace(",", " ") +
+            f" сум = {total_price:,}".replace(",", " ") + " сум"
         )
 
-    lines.append(f"\n💰 Общая сумма: {order.total_sum} сум")
+    lines.append(f"\n💰 Общая сумма: {order.total_sum:,}".replace(",", " ") + " сум")
     lines.append(f"📅 Дата: {order.created_at.strftime('%d.%m.%Y %H:%M')}")
 
     return "\n".join(lines)

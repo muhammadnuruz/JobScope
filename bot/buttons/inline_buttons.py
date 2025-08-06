@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from bot.buttons.text import make_application, become_favourite, delete_card, forward_card, plus_1, plus_10, plus_5, \
-    close_order
+    close_order, clear_basket, forward_to_bot
 
 
 async def make_application_button(_id: int):
@@ -44,5 +44,7 @@ def buy_cards_button(id_: int):
     markup.add(InlineKeyboardButton(text=plus_1, callback_data=f"plus_1_{id_}"),
                InlineKeyboardButton(text=plus_5, callback_data=f"plus_5_{id_}"),
                InlineKeyboardButton(text=plus_10, callback_data=f"plus_10_{id_}"))
-    markup.add(InlineKeyboardButton(text=close_order, callback_data=f"close_order_{id_}"))
+    markup.add(InlineKeyboardButton(text=clear_basket, callback_data=f"clear_basket_{id_}"),
+               InlineKeyboardButton(text=close_order, callback_data=f"close_order_{id_}"))
+    markup.add(InlineKeyboardButton(text=forward_to_bot, url="t.me/TujjorsBot"))
     return markup

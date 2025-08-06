@@ -143,6 +143,7 @@ def save_basket_to_db(shop_id: int, user_id: int, card_id: int, count: int):
         if not created:
             basket.count += count
             basket.save()
+        return basket
     except Exception as e:
         pass
 
@@ -192,3 +193,8 @@ def get_user_orders(user_id: int, as_client=True):
         return list(Orders.objects.select_related("user", "shop").filter(user_id=user_id))
     else:
         return list(Orders.objects.select_related("user", "shop").filter(shop_id=user_id))
+
+
+@sync_to_async
+def clear_basket(user_id: int):
+    Basket.objects.filter(user_id=user_id).delete()

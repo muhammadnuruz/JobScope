@@ -61,7 +61,7 @@ class AIProductManager:
             "method": "getPrice",
             "params": {
                 "priceType": {
-                    "SD_id": "d0_3",
+                    "SD_id": "d0_1",
                     "code_1C": "code_1c"
                 }
             }
@@ -133,6 +133,7 @@ class AIProductManager:
             json=data
         )
         result = response.json()
+        print(result)
         if result['status'] is True:
             lst = result['result']
             prices = {price['product']["CS_id"]: price["price"] for price in lst}

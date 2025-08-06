@@ -9,9 +9,8 @@ import asyncio
 async def main():
     manager = AIProductManager()
     await manager.login()
-    items = await manager.get_items()
-    for item in items:
-        print(item['packQuantity'])
+    prices = await manager.get_prices()
+    # print(prices)
 
 
 if __name__ == "__main__":

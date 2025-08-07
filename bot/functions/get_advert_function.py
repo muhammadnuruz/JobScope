@@ -61,7 +61,7 @@ class AIProductManager:
             "method": "getPrice",
             "params": {
                 "priceType": {
-                    "SD_id": "d0_1",
+                    "SD_id": "d0_4",
                     "code_1C": "code_1c"
                 }
             }

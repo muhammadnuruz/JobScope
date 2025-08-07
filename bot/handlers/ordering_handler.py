@@ -22,12 +22,17 @@ async def ordering_function(call: CallbackQuery):
 
 
 def format_order_message(order) -> str:
-    lines = [f"🧾 Заказ от: {order.user.full_name}"]
-    lines.append(f"👤 Номер телефона продавца: {order.shop.phone_number}")
-    lines.append(f"👤 Клиент телефона продавца: {order.user.phone_number}")
-    lines.append(f"🛍 Продавец: {order.shop.full_name}")
-    lines.append("\n📦 Товары:")
+    lines = ["🆕 Новый заказ!\n"]
 
+    # Продавец
+    lines.append(f"👤 Продавец {order.shop.full_name}")
+    lines.append(f"Телефон: {order.shop.phone_number}")
+
+    # Клиент
+    lines.append(f"👤 Клиент (Покупатель): Телефон: {order.user.phone_number}\n")
+
+    # Список товаров
+    lines.append("📦 Товары:")
     for idx, item in enumerate(order.cards, start=1):
         total_price = item['count'] * item['price']
         lines.append(
@@ -35,6 +40,7 @@ def format_order_message(order) -> str:
             f" сум = {total_price:,}".replace(",", " ") + " сум"
         )
 
+    # Общая сумма и дата
     lines.append(f"\n💰 Общая сумма: {order.total_sum:,}".replace(",", " ") + " сум")
     lines.append(f"📅 Дата: {order.created_at.strftime('%d.%m.%Y %H:%M')}")
 
@@ -66,7 +72,7 @@ async def ordering_function_2(call: CallbackQuery):
 
     text = format_order_message(order)
 
-    await call.answer(text=f"✅ Ваш заказ успешно оформлен!")
+    await call.answer(text=f"✅ Ваш заказ успешно оформлен!", show_alert=True)
     await call.bot.send_message(chat_id=call.from_user.id, text=f"✅ Ваш заказ успешно оформлен!\n\n" + text)
 
     try:

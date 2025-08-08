@@ -11,12 +11,20 @@ async def ordering_function(call: CallbackQuery):
     if tg_user:
         _, num, id_ = call.data.split("_")
         card = await get_card_by_id(id_=id_)
-        basket = await save_basket_to_db(shop_id=card.user.id, user_id=tg_user.id, card_id=card.id, count=int(num))
+        basket = await save_basket_to_db(
+            shop_id=card.user.id,
+            user_id=tg_user.id,
+            card_id=card.id,
+            count=int(num)
+        )
+        total_price = int(num) * card.price
         await call.answer(
             f"🧺 {num} товаров добавлено в корзину.\n"
-            f"📦 Всего в корзине: {basket.count} товаров.",
+            f"💰 Стоимость: {total_price:,}".replace(",", " ") + " сум\n"
+                                                                f"📦 Всего в корзине: {basket.count} товаров.",
             show_alert=True
         )
+
     else:
         await call.answer(f"⛔ Сначала зарегистрируйтесь у бота.\n\n👉 t.me/TujjorSBot", show_alert=True)
 

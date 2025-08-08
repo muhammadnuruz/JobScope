@@ -25,11 +25,20 @@ def format_order_message(order) -> str:
     lines = ["🆕 Новый заказ!\n"]
 
     # Продавец
-    lines.append(f"👤 Продавец {order.shop.full_name}")
-    lines.append(f"Телефон: {order.shop.phone_number}")
+    lines.append(f"👤 Продавец: {order.shop.full_name}")
+    lines.append(f"📞 Телефон: {order.shop.phone_number}")
 
     # Клиент
-    lines.append(f"👤 Клиент (Покупатель): Телефон: {order.user.phone_number}\n")
+    lines.append(f"👤 Клиент (Покупатель)")
+    lines.append(f"📞 Телефон: {order.user.phone_number}")
+
+    # Если есть координаты — добавить ссылку на локацию
+    if getattr(order.user, "latitude", None) and getattr(order.user, "longitude", None):
+        lat = order.user.latitude
+        lon = order.user.longitude
+        lines.append(f"📍 Локация клиента: https://maps.google.com/?q={lat},{lon}")
+
+    lines.append("")  # пустая строка для разделения
 
     # Список товаров
     lines.append("📦 Товары:")

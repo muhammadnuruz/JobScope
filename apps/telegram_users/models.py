@@ -6,7 +6,7 @@ from apps.companies.models import Companies
 class TelegramUsers(models.Model):
     STATUS_CHOICES = [
         ('user', 'Пользователь'),
-        ('customer', 'Клиент'),
+        ('customer', 'Seller'),
         ('employee', 'Сотрудник'),
         ('manager', 'Менеджер'),
     ]

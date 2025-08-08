@@ -23,21 +23,59 @@ async def inline_company_search(inline_query: types.InlineQuery):
     query = inline_query.query.strip()
     params = {'search': query} if query else {}
     response = requests.get(API_URL, params=params)
-    results = []
+    results = [
+        InlineQueryResultArticle(
+            id=str(uuid4()),
+            title="Cotton Club ™ Hyal Sovia ™  Saff Robito ™ Biomed life ™ Billur ™ Teddy ™",
+            description="""+998907100805 
+⏩ https://t.me/dillerbuxaraok
+Бренди 
+✔Cotton Club ™
+✔Hyal Sovia ™
+✔Saff Robito ™
+Бренди 
+✔Biomed life ™
+✔Billur ™
+✔Teddy ™""",
+            input_message_content=InputTextMessageContent(
+                message_text=f"""🏢 Cotton Club ™ Hyal Sovia ™  Saff Robito ™ Biomed life ™ Billur ™ Teddy ™
+📝 +998907100805 
+⏩ https://t.me/dillerbuxaraok
+Бренди 
+✔Cotton Club ™
+✔Hyal Sovia ™
+✔Saff Robito ™
+Бренди 
+✔Biomed life ™
+✔Billur ™
+✔Teddy ™\n\nДля заказа: https://t.me/dillerbuxaraok"""
+            )
+        ),
+        InlineQueryResultArticle(
+            id=str(uuid4()),
+            title="Biomedlife +998991250805",
+            description="-",
+            input_message_content=InputTextMessageContent(
+                message_text=f"🏢 Biomedlife +998991250805\n📝-\n\nДля заказа: -"
+            )
+        ),
+    ]
 
     if response.status_code == 200:
         data = response.json()
         for company in data.get("results", [])[:10]:
-            results.append(
-                InlineQueryResultArticle(
-                    id=str(uuid4()),
-                    title=company['name'],
-                    description=company.get('description', '—'),
-                    input_message_content=InputTextMessageContent(
-                        message_text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\nДля заказа: {company['link']}"
+            if company['name'] != "Biomedlife +998991250805" or company[
+                'name'] != "Cotton Club ™ Hyal Sovia ™  Saff Robito ™ Biomed life ™ Billur ™ Teddy ™":
+                results.append(
+                    InlineQueryResultArticle(
+                        id=str(uuid4()),
+                        title=company['name'],
+                        description=company.get('description', '—'),
+                        input_message_content=InputTextMessageContent(
+                            message_text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\nДля заказа: {company['link']}"
+                        )
                     )
                 )
-            )
     await inline_query.answer(results, cache_time=1)
 
 

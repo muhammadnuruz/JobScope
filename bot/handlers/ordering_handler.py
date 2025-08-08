@@ -76,7 +76,7 @@ async def ordering_function_2(call: CallbackQuery):
     await call.bot.send_message(chat_id=call.from_user.id, text=f"✅ Ваш заказ успешно оформлен!\n\n" + text)
 
     try:
-        await call.bot.send_message(chat_id=shop.chat_id, text=f"🆕 Новый заказ!\n\n{text}")
+        await call.bot.send_message(chat_id=shop.chat_id, text=f"{text}")
     except Exception:
         pass
 

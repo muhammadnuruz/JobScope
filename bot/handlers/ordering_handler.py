@@ -33,9 +33,9 @@ def format_order_message(order) -> str:
     lines.append(f"📞 Телефон: {order.user.phone_number}")
 
     # Если есть координаты — добавить ссылку на локацию
-    if getattr(order.user, "latitude", None) and getattr(order.user, "longitude", None):
-        lat = order.user.latitude
-        lon = order.user.longitude
+    if getattr(order.user, "location_lat", None) and getattr(order.user, "location_lng", None):
+        lat = order.user.location_lat
+        lon = order.user.location_lng
         lines.append(f"📍 Локация клиента: https://maps.google.com/?q={lat},{lon}")
 
     lines.append("")  # пустая строка для разделения

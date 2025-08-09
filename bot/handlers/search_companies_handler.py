@@ -26,6 +26,24 @@ async def inline_company_search(inline_query: types.InlineQuery):
     results = [
         InlineQueryResultArticle(
             id=str(uuid4()),
+            title="Olivia ™ +998907104071",
+            description="""Olivia ™
+Жидкое мыло,  Туалетное мыло,
+Косметическая и парфюмерная продукция,
+Моющие и чистящие средства, 
+Средства для мытья посуды ,
+Средства для мытья стекол,\n\nАдрес бота: @TujjorSBot""",
+            input_message_content=InputTextMessageContent(
+                message_text="""Olivia ™ +998907104071\n📝 Olivia ™
+Жидкое мыло,  Туалетное мыло,
+Косметическая и парфюмерная продукция,
+Моющие и чистящие средства, 
+Средства для мытья посуды ,
+Средства для мытья стекол\n\nАдрес бота: @TujjorSBot"""
+            )
+        ),
+        InlineQueryResultArticle(
+            id=str(uuid4()),
             title="Cotton Club ™ Hyal Sovia ™  Saff Robito ™ Biomed life ™ Billur ™ Teddy ™",
             description="""+998907100805 
 ⏩ https://t.me/dillerbuxaraok
@@ -36,7 +54,7 @@ async def inline_company_search(inline_query: types.InlineQuery):
 Бренди 
 ✔Biomed life ™
 ✔Billur ™
-✔Teddy ™""",
+✔Teddy ™\n\nАдрес бота: @TujjorSBot""",
             input_message_content=InputTextMessageContent(
                 message_text=f"""🏢 Cotton Club ™ Hyal Sovia ™  Saff Robito ™ Biomed life ™ Billur ™ Teddy ™
 📝 +998907100805 
@@ -48,33 +66,15 @@ async def inline_company_search(inline_query: types.InlineQuery):
 Бренди 
 ✔Biomed life ™
 ✔Billur ™
-✔Teddy ™\n\nДля заказа: https://t.me/dillerbuxaraok"""
+✔Teddy ™\n\nДля заказа: https://t.me/dillerbuxaraok\n\nАдрес бота: @TujjorSBot"""
             )
         ),
         InlineQueryResultArticle(
             id=str(uuid4()),
             title="Biomedlife +998991250805",
-            description="-",
+            description="-\n\nАдрес бота: @TujjorSBot",
             input_message_content=InputTextMessageContent(
-                message_text=f"🏢 Biomedlife +998991250805\n📝-\n\nДля заказа: -"
-            )
-        ),
-        InlineQueryResultArticle(
-            id=str(uuid4()),
-            title="Olivia ™ +998907104071",
-            description="""Olivia ™
-Жидкое мыло,  Туалетное мыло,
-Косметическая и парфюмерная продукция,
-Моющие и чистящие средства, 
-Средства для мытья посуды ,
-Средства для мытья стекол,""",
-            input_message_content=InputTextMessageContent(
-                message_text="""Olivia ™ +998907104071\n📝 Olivia ™
-Жидкое мыло,  Туалетное мыло,
-Косметическая и парфюмерная продукция,
-Моющие и чистящие средства, 
-Средства для мытья посуды ,
-Средства для мытья стекол"""
+                message_text=f"🏢 Biomedlife +998991250805\n📝-\n\nДля заказа: -\n\nАдрес бота: @TujjorSBot"
             )
         )
     ]
@@ -89,9 +89,9 @@ async def inline_company_search(inline_query: types.InlineQuery):
                     InlineQueryResultArticle(
                         id=str(uuid4()),
                         title=company['name'],
-                        description=company.get('description', '—'),
+                        description=company.get('description', '—') + "\n\nАдрес бота: @TujjorSBot",
                         input_message_content=InputTextMessageContent(
-                            message_text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\nДля заказа: {company['link']}"
+                            message_text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\nДля заказа: {company['link']}\n\nАдрес бота: @TujjorSBot"
                         )
                     )
                 )
@@ -107,7 +107,7 @@ async def send_company_info(msg: types.Message):
         company = response.json()['results'][0]
         await msg.answer(
             parse_mode="HTML",
-            text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>\n\nАдрес бота: @TujjorSBot ",
+            text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>\n\nАдрес бота: @TujjorSBot",
             reply_markup=await make_application_button(company['id'])
         )
 

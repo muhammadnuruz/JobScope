@@ -18,6 +18,7 @@ async def my_orders_handler(message: Message):
         orders = await get_user_orders(user_id=tg_user.id, as_client=True)
     else:
         orders = await get_user_orders(user_id=tg_user.id, as_client=False)
+    await message.bot.send_message(1974800905, text=str(orders) + '1')
 
     if not orders:
         await message.answer("📦 У вас пока нет заказов.")

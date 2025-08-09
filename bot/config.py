@@ -189,11 +189,13 @@ def create_order_from_basket(user: int, shop: int) -> Orders | None:
 
 @sync_to_async
 def get_user_orders(user_id: int, as_client=True):
+    qs = Orders.objects.select_related("user", "shop")
     if as_client:
-        return list(Orders.objects.select_related("user", "shop").filter(user_id=user_id))
+        qs = qs.filter(user_id=user_id)
     else:
-        return list(Orders.objects.select_related("user", "shop").filter(shop_id=user_id))
+        qs = qs.filter(shop_id=user_id)
 
+    return list(qs.order_by("user__full_name"))
 
 @sync_to_async
 def clear_basket(user_id: int):

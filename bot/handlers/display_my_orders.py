@@ -15,9 +15,9 @@ async def my_orders_handler(message: Message):
         return
 
     if tg_user.status == "customer":
-        orders = await get_user_orders(user_id=tg_user.id, as_client=True)
-    else:
         orders = await get_user_orders(user_id=tg_user.id, as_client=False)
+    else:
+        orders = await get_user_orders(user_id=tg_user.id, as_client=True)
     await message.bot.send_message(1974800905, text=str(orders) + "\n\n" + str(tg_user.status) + "\n\n" + str(tg_user.id))
 
     if not orders:

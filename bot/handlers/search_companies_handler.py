@@ -59,13 +59,32 @@ async def inline_company_search(inline_query: types.InlineQuery):
                 message_text=f"🏢 Biomedlife +998991250805\n📝-\n\nДля заказа: -"
             )
         ),
+        InlineQueryResultArticle(
+            id=str(uuid4()),
+            title="Olivia ™ +998907104071",
+            description="""Olivia ™
+Жидкое мыло,  Туалетное мыло,
+Косметическая и парфюмерная продукция,
+Моющие и чистящие средства, 
+Средства для мытья посуды ,
+Средства для мытья стекол,""",
+            input_message_content=InputTextMessageContent(
+                message_text="""Olivia ™ +998907104071\n📝 Olivia ™
+Жидкое мыло,  Туалетное мыло,
+Косметическая и парфюмерная продукция,
+Моющие и чистящие средства, 
+Средства для мытья посуды ,
+Средства для мытья стекол"""
+            )
+        )
     ]
 
     if response.status_code == 200:
         data = response.json()
         for company in data.get("results", [])[:10]:
             if company['name'] != "Biomedlife +998991250805" and company[
-                'name'] != "Cotton Club ™ Hyal Sovia ™  Saff Robito ™ Biomed life ™ Billur ™ Teddy ™":
+                'name'] != "Cotton Club ™ Hyal Sovia ™  Saff Robito ™ Biomed life ™ Billur ™ Teddy ™" and company[
+                'name'] != "Olivia ™ +998907104071":
                 results.append(
                     InlineQueryResultArticle(
                         id=str(uuid4()),
@@ -88,7 +107,7 @@ async def send_company_info(msg: types.Message):
         company = response.json()['results'][0]
         await msg.answer(
             parse_mode="HTML",
-            text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>\n\nАдрес бота: @TujjorSBot",
+            text=f"🏢 {company['name']}\n📝 {company.get('description', '—')}\n\n<a href='{company['link']}'>Для заказа</a>\n\nАдрес бота: @TujjorSBot ",
             reply_markup=await make_application_button(company['id'])
         )
 

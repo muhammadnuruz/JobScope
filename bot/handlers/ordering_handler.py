@@ -11,22 +11,26 @@ async def ordering_function(call: CallbackQuery):
     if tg_user:
         _, num, id_ = call.data.split("_")
         card = await get_card_by_id(id_=id_)
-        basket = await save_basket_to_db(
+        await save_basket_to_db(
             shop_id=card.user.id,
             user_id=tg_user.id,
             card_id=card.id,
             count=int(num)
         )
-        total_price = int(num) * card.price
+        baskets = await get_baskets(shop_id=card.user.id, user_id=tg_user.id)
+        total_price = sum(b.card.price * b.count for b in baskets)
+        total_count = sum(b.count for b in baskets)
         await call.answer(
             f"🧺 {num} товаров добавлено в корзину.\n"
-            f"💰 Стоимость: {total_price:,}".replace(",", " ") + " сум\n"
-                                                                f"📦 Всего в корзине: {basket.count} товаров.",
+            f"💰 Общая стоимость: {total_price:,}".replace(",", " ") + " сум\n"
+                                                                      f"📦 Всего в корзине: {total_count} товаров.",
             show_alert=True
         )
-
     else:
-        await call.answer(f"⛔ Сначала зарегистрируйтесь у бота.\n\n👉 t.me/TujjorSBot", show_alert=True)
+        await call.answer(
+            f"⛔ Сначала зарегистрируйтесь у бота.\n\n👉 t.me/TujjorSBot",
+            show_alert=True
+        )
 
 
 def format_order_message(order) -> str:

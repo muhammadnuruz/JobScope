@@ -47,7 +47,7 @@ def format_order_message(order) -> str:
     if getattr(order.user, "location_lat", None) and getattr(order.user, "location_lng", None):
         lat = order.user.location_lat
         lon = order.user.location_lng
-        lines.append(f"📍 Локация клиента: https://maps.google.com/?q={lat},{lon}")
+        lines.append(f"📍 Локация клиента: <a href='https://maps.google.com/?q={lat},{lon}'>Открыть в Google Maps</a>")
 
     lines.append("")  # пустая строка для разделения
 

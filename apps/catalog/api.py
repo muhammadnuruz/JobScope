@@ -46,8 +46,7 @@ class APIClient:
                 "method": "getPrice",
                 "params": {
                     "priceType": {
-                        "SD_id": "d0_3",
-                        "code_1C": "code_1c"
+                        "SD_id": "d0_2",
                     }
                 }
             }
